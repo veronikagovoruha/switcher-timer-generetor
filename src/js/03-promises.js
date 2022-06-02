@@ -32,16 +32,15 @@ function collectInputs(form) {
 function sumbmitForm(event) {
   event.preventDefault();
   const inputValues = collectInputs(event.target);
-  setTimeout(() => {
-    console.log(inputValues);
-    for (let i = 1; i <= inputValues['amount']; i += 1) {
-      createPromise(i, inputValues['step'] * i)
-        .then(({ position, delay }) => {
-          Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-        })
-        .catch(({ position, delay }) => {
-          Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-        });
-    }
-  }, inputValues['delay']);
+  let delay = inputValues['delay'];
+  for (let i = 1; i <= inputValues['amount']; i += 1) {
+    createPromise(i, delay)
+      .then(({ position, delay }) => {
+        Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(({ position, delay }) => {
+        Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+      });
+    delay += inputValues['step'];
+  }
 }
